@@ -101,7 +101,6 @@ class ListingsController extends Controller
     }
 
     public function handleInactiveListings(int $feed_listings_count, int $inactive_listings_count, array $inactive_listings){
-
         try {
             //code...
                 $inactive_listing_report = "";
