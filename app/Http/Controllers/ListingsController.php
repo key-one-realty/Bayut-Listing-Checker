@@ -59,7 +59,7 @@ class ListingsController extends Controller
         $pagination_count = $request->pagination_count;
 
         $client_bayut_Listings = $this->handleClientBayutListings($company_slug, $pagination_count);
-        dd($client_bayut_Listings);
+        // dd($client_bayut_Listings);
         
         return $client_bayut_Listings->hits;
     }
