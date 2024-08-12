@@ -122,10 +122,10 @@ class ListingsController extends Controller
                 "inactive_listings_report" => $inactive_listing_report
             ];
 
-            print_r("Sending mail");
+            // print_r("Sending mail");
             // Mail::to($this->portfolio_manager_mail)->queue(new InactiveListingReport($inactive_listing_mail_data));
             Mail::to($this->portfolio_manager_mail)->send(new InactiveListingReport($inactive_listing_mail_data));
-            print_r("Mail sent");
+            // print_r("Mail sent");
         } catch (\Throwable $th) {
             throw $th;
         }
