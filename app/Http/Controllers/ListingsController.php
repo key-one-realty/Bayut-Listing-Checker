@@ -25,6 +25,7 @@ class ListingsController extends Controller
     {
         try {
             //code...
+            // dd($this->keyone_listing_xml_feed_link);
             curl_setopt($this->ch, CURLOPT_URL, $this->keyone_listing_xml_feed_link);
             curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($this->ch, CURLOPT_TIMEOUT, 300); 
@@ -112,7 +113,7 @@ class ListingsController extends Controller
                 Property Title: {$listings->Property_Title} \n
                 ";
 
-                $inactive_listing_report .= $listing_report;
+                $inactive_listing_report .= $listing_report; 
             }
 
             $inactive_listing_mail_data = [
@@ -121,7 +122,10 @@ class ListingsController extends Controller
                 "inactive_listings_report" => $inactive_listing_report
             ];
 
-            Mail::to($this->portfolio_manager_mail)->queue(new InactiveListingReport($inactive_listing_mail_data));
+            print_r("Sending mail");
+            // Mail::to($this->portfolio_manager_mail)->queue(new InactiveListingReport($inactive_listing_mail_data));
+            Mail::to($this->portfolio_manager_mail)->send(new InactiveListingReport($inactive_listing_mail_data));
+            print_r("Mail sent");
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -205,7 +209,8 @@ class ListingsController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 "success" => false,
-                "message" => "Error comparing listings: " . $th->getMessage()
+                "message" => "Error comparing listings: " . $th->getMessage(),
+                "stacktrace" => $th->getTraceAsString()
             ]);
         }
     }
