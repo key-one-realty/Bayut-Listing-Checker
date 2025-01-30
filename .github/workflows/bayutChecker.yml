@@ -1,0 +1,10 @@
+name: bayut-cheker
+on: push
+jobs:
+    bayut-check:
+        name: bayut checker
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
