@@ -23,7 +23,7 @@ jobs:
                 docker save bayut-docker:0.0.2 -o bayut-docker.tar
                 chmod 644 bayut-docker.tar
 
-            - name: Copy nginx docker image to droplet
+            - name: Copy Nginx docker image to droplet
               uses: appleboy/scp-action@master
               with:
                   host: ${{secrets.HOST}}
