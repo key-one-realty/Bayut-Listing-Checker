@@ -23,11 +23,8 @@ jobs:
                 docker save bayut-docker:0.0.2 -o bayut-docker.tar
                 chmod 644 bayut-docker.tar
 
-            - name: Register SSH
-              run: ssh-add ~/.ssh/droplet  
-           
             - name: Copy nginx docker image to droplet
-              uses: appleboy/scp-action@v0.1.7
+              uses: appleboy/scp-action@master
               with:
                   host: ${{secrets.HOST}}
                   username: ${{secrets.USERNAME}}
