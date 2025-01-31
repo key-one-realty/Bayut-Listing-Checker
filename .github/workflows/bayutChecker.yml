@@ -35,6 +35,9 @@ jobs:
                   target: ~/images
                   debug: true
                   
+            - name: Test SSH Connection
+              run: ssh -o StrictHostKeyChecking=no -v ${{ secrets.USERNAME }}@${{ secrets.HOST }} "echo 'SSH Connection Successful'"
+                  
 
 
 
