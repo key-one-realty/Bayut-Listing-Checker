@@ -22,8 +22,9 @@ jobs:
               run: |
                 docker save bayut-docker:0.0.2 -o bayut-docker.tar
                 chmod 644 bayut-docker.tar
-            - name: Test SSH Connection
-              run: ssh -o StrictHostKeyChecking=no -v ${{ secrets.USERNAME }}@${{ secrets.HOST }} "echo 'SSH Connection Successful'"
+
+            - name: Register SSH
+              run: ssh-add ~/.ssh/droplet  
            
             - name: Copy nginx docker image to droplet
               uses: appleboy/scp-action@v0.1.7
