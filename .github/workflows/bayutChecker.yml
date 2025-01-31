@@ -11,10 +11,13 @@ jobs:
             - name: Build Nginx docker image
               run: |
                 docker build -f nginxdockerfile -t bayut-docker:0.0.2 .
-
-            - name: Build Nginx docker image
+                
+            - name: Save nginx docker image as tar
               run: |
-                docker build -f nginxdockerfile -t bayut-docker:0.0.2 .
+                docker save bayut-docker:0.0.2 -o bayut-docker.tar
+                chmod 644 bayut-docker.tar
+        
+           
                 
             # - name: Copy nginx docker image to droplet
             #   uses: appleboy/scp-action@v0.1.7

@@ -1,0 +1,81 @@
+FROM nginx:alpine
+
+# Remove conflicting group and create laravel user/group
+RUN delgroup dialout && \
+    addgroup --system laravel && \
+    adduser -G laravel --system -D -s /bin/sh laravel
+
+# Update Nginx configuration
+RUN sed -i "s/user  nginx;/user laravel;/g" /etc/nginx/nginx.conf
+
+# Copy Nginx configuration
+ADD ./nginx/default.conf /etc/nginx/conf.d/
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy application files and set ownership during copy
+COPY --chown=laravel:laravel . /var/www/html
+
+# Ensure proper permissions
+RUN mkdir -p /var/cache/nginx/client_temp && \
+    chown -R laravel:laravel /var/cache/nginx && \
+    chmod -R 755 /var/www/html
+
+# Expose necessary ports
+EXPOSE 80 443
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
+
+
+
+
+# FROM nginx:alpine
+
+# # # Accept UID and GID as build arguments
+# # ARG UID
+# # ARG GID
+
+# # # Set UID and GID as environment variables
+# # ENV UID=${UID}
+# # ENV GID=${GID}
+
+# # Remove conflicting group in Alpine
+# RUN delgroup dialout
+
+# # Create 'laravel' system user and group with specified UID and GID
+# RUN addgroup --system laravel
+# RUN adduser -G laravel --system -D -s /bin/sh laravel
+
+# # Update Nginx configuration to use the 'laravel' user
+# RUN sed -i "s/user  nginx;/user laravel;/g" /etc/nginx/nginx.conf
+
+# ADD ./nginx/default.conf /etc/nginx/conf.d/
+
+# # Set working directory
+# WORKDIR /var/www/html
+
+# # Copy application files
+# COPY ./public /var/www/html
+
+# # Adjust ownership and permissions for the application directory
+# RUN chown -R laravel:laravel /var/www/html && chmod -R 755 /var/www/html
+
+
+# # Ensure proper permissions for Nginx cache directories
+# RUN mkdir -p /var/cache/nginx/client_temp && \
+#     chown -R laravel:laravel /var/cache/nginx
+
+# # # Give Laravel user ownership of all files and directories
+# # RUN chown -R laravel:laravel /var/www/html /var/cache /var/log /var/run && \
+# #     chmod -R 777 /var/www/html
+
+# # Expose necessary ports
+# EXPOSE 80 443
+
+# # # Switch to the 'laravel' user
+# # USER laravel
+
+# # # Start Nginx
+# # CMD ["nginx", "-g", "daemon off;"]
