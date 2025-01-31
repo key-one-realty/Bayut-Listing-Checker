@@ -25,7 +25,7 @@ jobs:
         
            
             - name: Copy nginx docker image to droplet
-              uses: appleboy/scp-action
+              uses: appleboy/scp-action@v0.1.7
               with:
                   host: ${{secrets.HOST}}
                   username: ${{secrets.USERNAME}}
@@ -34,7 +34,7 @@ jobs:
                   source: bayut-docker.tar
                   target: ~/images
                   debug: true
-
+                  
 
 
 
