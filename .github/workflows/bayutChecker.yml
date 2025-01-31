@@ -29,8 +29,8 @@ jobs:
               with:
                   host: ${{secrets.HOST}}
                   username: ${{secrets.USERNAME}}
-                  password: ${{secrets.KEY}}
-                #   passphrase: ${{secrets.PASSPHRASE}}
+                  passphrase: ${{secrets.PASSPHRASE}}
+                  key: ${{secrets.KEY}}
                   source: bayut-docker.tar
                   target: ~/images
 
