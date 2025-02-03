@@ -1,19 +1,13 @@
 name: bayut-cheker
 on: push
 jobs:
-    bayut-check:
-        name: bayut checker
+    deploy-nginx-to-server:
+        name: deploy-nginx-to-server
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
-            # - name: Login to Docker Hub
-            #   uses: docker/login-action@v3
-            #   with:
-            #       username: ${{ secrets.DOCKERHUB_USERNAME }}
-            #       password: ${{ secrets.DOCKERHUB_TOKEN }}
-           
             - name: Build Nginx docker image
               run: |
                 docker build -f nginxdockerfile -t bayut-docker:0.0.2 .
