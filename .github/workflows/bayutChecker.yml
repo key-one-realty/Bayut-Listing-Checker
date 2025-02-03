@@ -1,86 +1,44 @@
 name: bayut-cheker
 on: push
-
-
 jobs:
-  deploy-nginx-to-server:
-    name: Deploy Nginx to Server
-    runs-on: ubuntu-latest
+    deploy-nginx-to-server:
+        name: deploy-nginx-to-server
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          install: true
-
-      - name: Cache Docker Layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache-nginx
-          key: ${{ runner.os }}-nginx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-nginx-
-
-      - name: Build Nginx Docker Image
-        run: |
-          docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache-nginx \
-                              --cache-to=type=local,dest=/tmp/.buildx-cache-nginx \
-                              -f nginxdockerfile -t bayut-docker:0.0.2 --load .
-
-      - name: Set up SSH Agent for Nginx Server
-        run: |
-          echo "${{ secrets.KEY }}" > /tmp/deploy_key
-          chmod 600 /tmp/deploy_key
-          eval $(ssh-agent -s)
-          echo "${{ secrets.PASSPHRASE }}" | ssh-add /tmp/deploy_key
-
-      - name: Transfer and Load Nginx Docker Image
-        run: |
-          docker save hh-docker:0.0.2 | ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} "docker load"
-
-
-# jobs:
-#     deploy-nginx-to-server:
-#         name: deploy-nginx-to-server
-#         runs-on: ubuntu-latest
-#         steps:
-#             - name: Checkout code
-#               uses: actions/checkout@v3
-
-#             - name: Build Nginx docker image
-#               run: |
-#                 docker build -f nginxdockerfile -t bayut-docker:0.0.2 .
+            - name: Build Nginx docker image
+              run: |
+                docker build -f nginxdockerfile -t bayut-docker:0.0.2 .
                 
-#             - name: Save nginx docker image as tar
-#               run: |
-#                 docker save bayut-docker:0.0.2 -o bayut-docker.tar
-#                 chmod 644 bayut-docker.tar
+            - name: Save nginx docker image as tar
+              run: |
+                docker save bayut-docker:0.0.2 -o bayut-docker.tar
+                chmod 644 bayut-docker.tar
 
-#             - name: Copy Nginx docker image to droplet
-#               uses: appleboy/scp-action@v0.1.7
-#               with:
-#                     host: ${{secrets.HOST}}
-#                     username: ${{secrets.USERNAME}}
-#                     passphrase: ${{secrets.PASSPHRASE}}
-#                     key: ${{secrets.KEY}}
-#                     source: bayut-docker.tar
-#                     target: ~/images
+            - name: Copy Nginx docker image to droplet
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                    host: ${{secrets.HOST}}
+                    username: ${{secrets.USERNAME}}
+                    passphrase: ${{secrets.PASSPHRASE}}
+                    key: ${{secrets.KEY}}
+                    source: bayut-docker.tar
+                    target: ~/images
 
 
-#             - name: Load the nginx and app docker image to run
-#               uses: appleboy/ssh-action@v1.0.3
-#               with:
-#                 host: ${{secrets.HOST}}
-#                 username: ${{secrets.USERNAME}}
-#                 passphrase: ${{secrets.PASSPHRASE }}
-#                 key: ${{secrets.KEY}}
-#                 script: |
-#                     docker load -i /root/images/bayut-docker.tar
-#                     docker rm -f bayut-docker
-#                     docker rm -f bayut-docker-app
+            - name: Load the nginx and app docker image to run
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                host: ${{secrets.HOST}}
+                username: ${{secrets.USERNAME}}
+                passphrase: ${{secrets.PASSPHRASE }}
+                key: ${{secrets.KEY}}
+                script: |
+                    docker load -i /root/images/bayut-docker.tar
+                    docker rm -f bayut-docker
+                    docker rm -f bayut-docker-app
            
     # deploy-app-to-server:
     #     needs: bayut-check
