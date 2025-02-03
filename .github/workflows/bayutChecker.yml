@@ -47,7 +47,45 @@ jobs:
                     docker rm -f bayut-docker
                     docker rm -f bayut-docker-app
            
-                  
+    # deploy-app-to-server:
+    #     needs: bayut-check
+    #     name: deploy-app-to-server
+    #     runs-on: ubuntu-latest
+
+    #     steps:
+    #     - name: Checkout Code
+    #         uses: actions/checkout@v3
+
+    #     - name: Build app docker image
+    #         run: |
+    #         docker build -f appdockerfile -t hh-docker-app:0.0.2 .
+        
+    #     - name: Save app docker image as tar
+    #         run: |
+    #         docker save hh-docker-app:0.0.2 -o hh-docker-app.tar
+    #         chmod 644 hh-docker-app.tar
+        
+    #     - name: Copy app docker image to droplet
+    #         uses: appleboy/scp-action@v0.1.7
+    #         with:
+    #         host: ${{secrets.HOST}}
+    #         username: ${{secrets.USERNAME}}
+    #         passphrase: ${{ secrets.PASSPHRASE }}
+    #         key: ${{secrets.KEY}}
+    #         source: hh-docker-app.tar
+    #         target: ~/images
+
+    #     - name: Load the app docker image on the server
+    #         uses: appleboy/ssh-action@master
+    #         with:
+    #         host: ${{secrets.HOST}}
+    #         username: ${{secrets.USERNAME}}
+    #         passphrase: ${{ secrets.PASSPHRASE }}
+    #         key: ${{secrets.KEY}}
+    #         command_timeout: 20m
+    #         script: |
+    #             docker load -i /root/images/hh-docker-app.tar
+        
 
 
 
