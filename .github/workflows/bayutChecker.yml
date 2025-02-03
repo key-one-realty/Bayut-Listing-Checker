@@ -24,16 +24,28 @@ jobs:
                 chmod 644 bayut-docker.tar
 
             - name: Copy Nginx docker image to droplet
-               uses: appleboy/scp-action@v0.1.7
-               with:
-                  host: ${{secrets.HOST}}
-                  username: ${{secrets.USERNAME}}
-                  passphrase: ${{secrets.PASSPHRASE}}
-                  key: ${{secrets.KEY}}
-                  source: bayut-docker.tar
-                  target: ~/images
-                  debug: true
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                    host: ${{secrets.HOST}}
+                    username: ${{secrets.USERNAME}}
+                    passphrase: ${{secrets.PASSPHRASE}}
+                    key: ${{secrets.KEY}}
+                    source: bayut-docker.tar
+                    target: ~/images
+                    debug: true
 
+
+            - name: Load the nginx and app docker image to run
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                host: ${{secrets.HOST}}
+                username: ${{secrets.USERNAME}}
+                passphrase: ${{ secrets.PASSPHRASE }}
+                key: ${{secrets.KEY}}
+                script: |
+                    docker load -i /root/images/bayut-docker.tar
+                    docker rm -f bayut-docker
+                    docker rm -f bayut-docker-app
            
                   
 
